@@ -2,10 +2,13 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from library.models import Reader, Book
+from library.validators import PhoneValidator
 
 
 class ReaderSerializer(serializers.ModelSerializer):
     books = serializers.SlugRelatedField(queryset=Book.objects.all(), slug_field='name', many=True)
+
+    phone = serializers.CharField(validators=[PhoneValidator()])
 
     def validate(self, attrs):
         if len(attrs['books']) > 3:

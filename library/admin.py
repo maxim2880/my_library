@@ -16,8 +16,8 @@ class BookAdmin(admin.ModelAdmin):
         self.message_user(request, 'Книги удалены')
 
     def authors_link(self, obj):
-        author = obj.authors
-        url = reverse("admin:catalog_author_changelist") + str(author.pk)
+        author = obj.author
+        url = reverse("admin:library_author_changelist") + str(author.pk)
         return format_html(f'<a href="{url}"> {author} </a>')
 
     authors_link.short_description = 'Авторы'
@@ -38,10 +38,10 @@ class ReaderAdmin(admin.ModelAdmin):
         count = queryset.update(status=False)
         self.message_user(request, f'Деактивировано {count} пользователей')
 
-    # @admin.action(description="Удалить все книги")
-    # def delete_all_books(self, request, queryset: QuerySet):
-    #     queryset.update(books="")
-    #     self.message_user(request, 'У пользователя удалены все книги')
+    @admin.action(description="Удалить все книги")
+    def delete_all_books(self, request, queryset: QuerySet):
+        queryset.update(books=None)
+        self.message_user(request, 'У пользователя удалены все книги')
 
 
 admin.site.register(Reader, ReaderAdmin)
