@@ -6,7 +6,7 @@ from library.validators import NumbersPageValidator
 
 
 class BookSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(queryset=Author.objects.all(), slug_field='surname', many=True)
+    author = serializers.SlugRelatedField(queryset=Author.objects.all(), slug_field='surname')
 
     num_pages = serializers.IntegerField(validators=[NumbersPageValidator()])
 

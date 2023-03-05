@@ -33,7 +33,7 @@ class Book(DatesModelMixin):
     name = models.CharField(verbose_name='Имя', max_length=40)
     description = models.CharField(verbose_name='Описание', max_length=1000, blank=True)
     num_pages = models.PositiveSmallIntegerField(verbose_name="Количество страниц")
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, blank=True)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, blank=True, null=True)
     num_books = models.PositiveSmallIntegerField(verbose_name="Количество книг в библиотеке", default=1)
 
     def __str__(self):

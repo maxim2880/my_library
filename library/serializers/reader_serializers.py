@@ -19,14 +19,14 @@ class ReaderSerializer(serializers.ModelSerializer):
         if validated_data['books']:
             for book in validated_data['books']:
                 if book not in instance.book.all():
-                    if book.quantity > 0:
-                        book.quantity -= 1
+                    if book.num_books > 0:
+                        book.num_books -= 1
                         book.save()
                     else:
                         raise ValidationError(f'Книга {book.title} отсутствует')
             for book in instance.book.all():
                 if book not in validated_data['books']:
-                    book.quantity += 1
+                    book.num_books += 1
                     book.save()
 
         return super().update(instance, validated_data)

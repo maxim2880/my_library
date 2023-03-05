@@ -38,10 +38,11 @@ class ReaderAdmin(admin.ModelAdmin):
         count = queryset.update(status=False)
         self.message_user(request, f'Деактивировано {count} пользователей')
 
-    @admin.action(description="Удалить все книги")
-    def delete_all_books(self, request, queryset: QuerySet):
-        queryset.update(books=None)
-        self.message_user(request, 'У пользователя удалены все книги')
+    @admin.action(description='Удалить книги у читателя')
+    def delete_all_books(self, request, queryset):
+        for book in queryset:
+            book.books.clear()
+        self.message_user(request, f'Книги удалены')
 
 
 admin.site.register(Reader, ReaderAdmin)
