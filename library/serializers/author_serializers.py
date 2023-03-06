@@ -5,7 +5,6 @@ from library.models import Author
 
 
 class AuthorSerializer(serializers.ModelSerializer):
-    photo = serializers.ImageField(required=False)
 
     class Meta:
         model = Author
