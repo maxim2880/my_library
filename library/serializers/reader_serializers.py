@@ -8,7 +8,7 @@ from library.validators import PhoneValidator
 class ReaderSerializer(serializers.ModelSerializer):
     books = serializers.SlugRelatedField(queryset=Book.objects.all(), slug_field='name', many=True)
 
-    phone = serializers.CharField(validators=[PhoneValidator()])
+    phone_number = serializers.CharField(validators=[PhoneValidator()])
 
     def validate(self, attrs):
         if len(attrs['books']) > 3:
