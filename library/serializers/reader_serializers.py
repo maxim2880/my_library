@@ -15,21 +15,40 @@ class ReaderSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Не более 3 книг у читателя на руках')
         return attrs
 
+    def create(self, validated_data):
+        if validated_data['books']:
+            for book in validated_data['books']:
+                if book.num_books == 0:
+                    raise serializers.ValidationError('Нет книг невозможно создать пользователя')
+
+        books_data = validated_data.pop('books')
+        reader = Reader.objects.create(**validated_data)
+        for book_data in books_data:
+            book = Book.objects.get(pk=book_data.id)
+            if book.num_books > 0:
+                book.num_books -= 1
+                book.save()
+                reader.books.add(book)
+            else:
+                raise serializers.ValidationError(f"Книги {book.name} нет в наличии")
+        return reader
+
     def update(self, instance, validated_data):
         if validated_data['books']:
             for book in validated_data['books']:
-                if book not in instance.book.all():
+                if book not in instance.books.all():
                     if book.num_books > 0:
                         book.num_books -= 1
                         book.save()
                     else:
-                        raise ValidationError(f'Книга {book.title} отсутствует')
-            for book in instance.book.all():
+                        raise serializers.ValidationError('Книги нет в наличии')
+            for book in instance.books.all():
                 if book not in validated_data['books']:
                     book.num_books += 1
                     book.save()
-
-        return super().update(instance, validated_data)
+            return super().update(instance, validated_data)
+        else:
+            return super().update(instance, validated_data)
 
     class Meta:
         model = Reader

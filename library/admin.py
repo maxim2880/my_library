@@ -1,13 +1,13 @@
 from django.contrib import admin
 from django.db.models import QuerySet
 from django.urls import reverse
-from django.utils.html import format_html
+from django.utils.html import format_html, urlencode
 
 from library.models import Reader, Book, Author
 
 
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'author', 'num_books')
+    list_display = ('name', 'description', 'authors_link', 'num_books')
     actions = ['change_num_books']
 
     @admin.action(description="Убрать книги из библиотеки")
