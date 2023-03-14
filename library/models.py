@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
 class DatesModelMixin(models.Model):
@@ -41,7 +42,7 @@ class Book(DatesModelMixin):
         return f"Book: {self.name}"
 
 
-class Reader(DatesModelMixin):
+class Reader(DatesModelMixin, AbstractUser):
     class Meta:
         verbose_name = "Читатель"
         verbose_name_plural = "Читатели"
@@ -51,7 +52,7 @@ class Reader(DatesModelMixin):
     surname = models.CharField(verbose_name='Фамилия', max_length=40)
     phone_number = models.PositiveBigIntegerField(verbose_name="Номер телефона")
     status = models.BooleanField(default=True, verbose_name="Статус читателя")
-    books = models.ManyToManyField(Book, blank=True, null=True, verbose_name="Книги")
+    books = models.ManyToManyField(Book, blank=True, verbose_name="Книги")
 
     def display_books(self):
         return ', '.join([book.name for book in self.books.all()])

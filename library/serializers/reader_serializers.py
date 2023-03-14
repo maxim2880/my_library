@@ -16,11 +16,18 @@ class ReaderSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        # Хэширование пароля
+        # reader = super().create(validated_data)
+        #
+        # reader.set_password(reader.password)
+
+        # Проверка наличия книги
         if validated_data['books']:
             for book in validated_data['books']:
                 if book.num_books == 0:
                     raise serializers.ValidationError('Нет книг невозможно создать пользователя')
 
+        # Уменьшение количества книг в библиотеке
         books_data = validated_data.pop('books')
         reader = Reader.objects.create(**validated_data)
         for book_data in books_data:
@@ -31,6 +38,8 @@ class ReaderSerializer(serializers.ModelSerializer):
                 reader.books.add(book)
             else:
                 raise serializers.ValidationError(f"Книги {book.name} нет в наличии")
+
+        # reader.save()
         return reader
 
     def update(self, instance, validated_data):
