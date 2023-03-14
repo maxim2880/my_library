@@ -62,3 +62,7 @@ class Reader(DatesModelMixin, AbstractUser):
     def __str__(self):
 
         return f"Reader: {self.name}"
+
+    def save(self, *args, **kwargs):
+        self.set_password(self.password)
+        super().save(*args, **kwargs)
